@@ -1,0 +1,180 @@
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+<constant name="struts.custom.i18n.resources"
+value="ApplicationResources"/>
+<constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    <!--<constant name="struts.devMode" value="true" />-->
+    <constant name="struts.devMode" value="false" />
+	<package name ="default" extends="struts-default">
+		<interceptors>
+			<interceptor name="authenticationInterceptor"
+			class="org.SBPSWar.interceptor.AuthenticationInterceptor"/>
+	
+			<interceptor-stack name="secureStack">
+				<interceptor-ref name="authenticationInterceptor"/>
+				<interceptor-ref name="defaultStack"/>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="secureStack"/>
+		
+	</package>
+	
+	<package name="custom" extends="hibernate-default">					
+		<result-types>
+			<result-type name="tiles" class="org.apache.struts2.views.tiles.TilesResult" />
+			<result-type name="redirect"
+			class="org.apache.struts2.dispatcher.ServletRedirectResult"/>
+		</result-types>
+		
+		<interceptors>
+			<interceptor name="authenticationInterceptor"
+			class="org.SBPSWar.interceptor.AuthenticationInterceptor"/>
+			<interceptor name="fullProfileInterceptor"
+			class="org.SBPSWar.interceptor.FullProfileInterceptor"/>
+			<interceptor name="model-driven"
+			class="org.SBPSWar.interceptor.ModelDrivenInterceptor"/>
+			<interceptor name="fundingOptionInterceptor"
+			class="org.SBPSWar.interceptor.FundingOptionInterceptor"/>		
+		</interceptors>	
+		<action name="logOut" method="logout" class="org.SBPSWar.action.LogOutAction">
+			<result name="success" type="tiles">welcome</result>
+		</action>
+		
+		<action name="*Customer" method="{1}" class="org.SBPSWar.action.UserAction">
+			<!--<interceptor-ref name="defaultStackHibernate" />-->
+			<result name="emailCheck" type="tiles">emailCheck</result>
+			<result name="success" type="tiles">successCustomer</result>
+			<result name="failRegister" type="tiles">registerRecover</result>
+			<result name="restart" type="tiles">login</result>
+		</action>
+
+		<action name="*Login" method="{1}" class="org.SBPSWar.action.LoginAction">
+			<!--<interceptor-ref name="defaultStackHibernateStrutsValidation" />-->
+			<result name="input" type="tiles">login</result>
+			<result name="login" type="tiles">login</result>
+			<result name="loggedIn" type="tiles">welcome</result>
+			<result name="registerRecover" type="tiles">registerRecover</result>
+			<result name="restart" type="tiles">login</result>
+		</action>
+		<action name="*Link" method="{1}" class="org.SBPSWar.action.LinkAction">
+			<result name ="login" type="tiles">login</result>
+			<result name ="inviteUser" type="tiles">inviteUser</result>
+			<result name="addUser" type="tiles">registerRecover</result>
+			<result name="welcome" type="tiles">welcome</result>
+			<result name="friends" type="tiles">friendContainer</result>
+			<result name="masterList" type="tiles">masterContainer</result>
+			<result name="myPaymentsList" type="tiles">myPaymentsContainer</result>
+		</action>
+		
+		<action name="*Join" method="{1}" class="org.SBPSWar.action.InviJoinAction">
+			<interceptor-ref name="authenticationInterceptor" />	
+			<interceptor-ref name="defaultStackHibernate" />		
+			<result name="inviteUser" type="tiles">inviteUser</result>
+			<result name="success" type="tiles">friendContainer</result>
+			<result name="login" type="tiles">login</result>
+			<result name="restart" type="tiles">login</result>
+		</action>
+		
+		<action name="*Chain" method="{1}" class="org.SBPSWar.action.FullProfileAction">
+			<interceptor-ref name="fullProfileInterceptor" />	
+			<interceptor-ref name="defaultStackHibernate" />		
+			<result name="fullProfile" type="tiles">fullProfile</result>
+			<result name="input" type="tiles">fullProfile</result>
+			<result name="master" type="tiles">masterAdd</result>
+			<result name="restart" type="tiles">login</result>
+		</action>
+		
+		<action name="*Master" method="{1}" class="org.SBPSWar.action.MasterBillAction">
+			<result name="input" type="tiles">masterAdd</result>
+			<result name="master" type="tiles">masterContainer</result>
+			<result name="restart" type="tiles">login</result>
+		</action>
+		<action name="showUserMBS" method="showUserMBS" class="org.SBPSWar.action.MasterBillAction">
+			<result name="success" >/masterList.jsp</result>
+			<result name="restart" type="tiles">login</result>
+		</action>
+		<action name="*MB" method="{1}" class="org.SBPSWar.action.MasterAdminAction">
+			<interceptor-ref name="params"/>
+			<interceptor-ref name="defaultStackHibernate" />
+			<result name="input" >/masterDetail.jsp</result>
+			<result name="admin" type="tiles">masterContainer</result>
+			<result name="success" >/masterDetail.jsp</result>
+			<result name="restart" type="tiles">login</result>
+		</action>
+		
+		<action name="*Sequence" method="{1}" class="org.SBPSWar.action.AssignmentControllerAction">
+			<interceptor-ref name="params"/>
+			<interceptor-ref name="defaultStackHibernate" />
+			<result name="input" >/assignChain.jsp</result>
+			<result name="rerender" >/assignList.jsp</result>
+			<result name="success" >/assignChain.jsp</result>
+			<result name="restart" type="tiles">login</result>
+		</action>
+		<action name="assignedBills" method="assignedBills" class="org.SBPSWar.action.AssignmentControllerAction">
+			<interceptor-ref name="params"/>
+			<interceptor-ref name="defaultStackHibernate" />
+			<result name="input" >/assignChain.jsp</result>
+			<result name="rerender" >/assignList.jsp</result>
+			<result name="success" >/assignChain.jsp</result>
+			<result name="restart" type="tiles">login</result>
+		</action>
+		
+		<action name="myPaymentsList" method="findBillsAssignedToCurrentUser" class="org.SBPSWar.action.PaymentAction">
+			<interceptor-ref name="fundingOptionInterceptor" />
+			<interceptor-ref name="defaultStackHibernate" />
+			<result name="input" type="tiles">login</result>
+			<result name="nofund">/fundingOption.jsp</result>
+			<result name="success" type ="tiles">myPaymentsContainer</result>
+			<result name="list">/paymentList.jsp</result>
+			<result name="restart" type="tiles">login</result>
+		</action>
+		
+		<action name="reviewMyBills" method="reviewMyBills" class="org.SBPSWar.action.PaymentAction">
+			<interceptor-ref name="params"/>
+			<interceptor-ref name="defaultStackHibernate" />
+			<result name="input" type="tiles">login</result>
+			<result name="abDetail">/abDetail.jsp</result>
+			<result name="restart" type="tiles">login</result>
+		</action>
+		<action name="evaluateAssignment" method="evaluateAssignment" class="org.SBPSWar.action.PaymentAction">
+			<interceptor-ref name="params"/>
+			<interceptor-ref name="defaultStackHibernate" />
+			<result name="input" type="tiles">login</result>
+			<result name="success" type="tiles">myPaymentsContainer</result>
+			<result name="abDetail">/abDetail.jsp</result>		
+			<result name="restart" type="tiles">login</result>
+		</action>
+		<action name="fundingOption" method="addOption" class="org.SBPSWar.action.FundingOptionAction">
+			<interceptor-ref name="defaultStackHibernate" />
+			<result name="input" type="tiles">fundingOption</result>
+			<result name="success" type="tiles">myPaymentsContainer</result>
+			<result name="restart" type="tiles">login</result>
+		</action>
+	
+		<action name="friendAction" method="findAllTypesOfFriends" class="org.SBPSWar.action.FriendAction">
+			<interceptor-ref name="params"/>
+			<interceptor-ref name="defaultStackHibernate" />
+			<result name="success" >/friends.jsp</result>
+			<result name="restart" type="tiles">login</result>
+		</action>
+		
+		<action name="*Invitation" method="{1}" class="org.SBPSWar.action.FriendAction">
+			<interceptor-ref name="params"/>
+			<interceptor-ref name="defaultStackHibernate" />
+			<result name="respond" >/respond.jsp</result>
+			<result name="createChallengePrepare">/createChallenge.jsp</result>
+			<result name="reviewAnswerPrepare">/reviewAnswer.jsp</result>
+			<result name="restart" type="tiles">login</result>
+			<result name="friends" type="tiles">friendContainer</result>
+		</action>
+ 	
+	</package>
+		
+		
+
+
+	
+</struts>

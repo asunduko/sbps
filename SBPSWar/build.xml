@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="SBPSWar" default="war" basedir="."> 
+	<property file="build.properties"/>
+	<property name="name" value="SBPSWar"/>
+	<property name="debug" value="true" />
+    <property name="deprecation" value="false" />
+    <property name="nowarn" value="false" />	
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          Properties related to the directory tree and
+          temporary directories used for the build
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<property name="src.java.dir" location="src"/>
+    <property name="src.web.dir" location="WebContent"/>
+	
+    <property name="lib.web.dir" location="WebContent/WEB-INF/lib"/>
+
+    <property name="build.dir" location="build"/>
+    <property name="build.classes.dir" location="${build.dir}/classes"/>
+    <property name="build.web.dir" location="${build.dir}/web"/>
+    <property name="build.src.web.dir" location="${build.dir}/war"/>
+	<property name="build.webinf.lib.dir" location="${build.dir}/war/WEB-INF/lib"/>
+	
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          Locations of generated artifacts
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<property name="dist.dir" location="dist"/>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	          Classpaths
+	         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <path id="compile.classpath">
+      <fileset dir="${lib.web.dir}"> <!--WebContent/WEB-INF/lib -->
+    	  <include name="**/*.jar"/>
+      </fileset>	          	
+    </path>
+	
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	      init - create the output directories
+	     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->	
+    <target name="init">
+      <tstamp/>
+  	  <mkdir dir="${build.classes.dir}"/>
+    </target>
+	
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		  compile - Compile the code
+	     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<target name="compile" description="Compile Java source files" depends="init">
+		<copy todir="${build.classes.dir}">
+				<fileset dir="${src.java.dir}" includes="**/*.properties"/>
+		</copy>
+		
+	  <javac destdir="${build.classes.dir}" classpathref="compile.classpath"
+	         debug="${debug}" nowarn="${nowarn}"
+	         deprecation="${deprecation}" encoding="Cp1252" source="1.5"
+	         target="1.5">
+	         <src path="${src.java.dir}"/>
+
+	  </javac>
+  	 </target>	
+	
+	 <target name="replace-tokens" depends="compile">
+	    
+	  	<replace file="${build.classes.dir}/hibernate.cfg.xml">
+	  	       <replacefilter token="@show@" value="false"/>
+	  	     </replace>
+	  	<echo message="Spit out the truth"/>
+	  	
+	  </target>
+	
+	<!-- ===================================================================
+		          Jar the web project
+		         =================================================================== -->
+		    <target name="jar" depends="compile">
+		    	<mkdir dir="${dist.dir}"/>
+		        <jar destfile="${dist.dir}/${name}.jar">
+		            <fileset dir="${build.classes.dir}">
+		                <include name="**/*"/>
+		            	<exclude name="log4j.properties"/>
+		            </fileset>
+		        </jar>
+
+		        <!-- delete dir="${build.classes.dir}"/ -->
+
+		    </target>
+	
+    <!-- ===================================================================
+          War the web project
+         =================================================================== -->
+	<target name="war" depends="replace-tokens">
+		<war warfile="${dist.dir}/${name}.war"
+				             webxml="${src.web.dir}/WEB-INF/web.xml">
+				<fileset dir="WebContent"/>
+				<lib dir="WebContent/WEB-INF/lib"/>
+				<classes dir="build/classes"/>
+			</war>
+	</target>
+
+</project> 

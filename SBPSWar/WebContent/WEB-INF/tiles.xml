@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+
+  <definition name="baseLayout" template="/baseLayout.jsp" >
+      <put-attribute name="title"  value="Template"/>
+      <put-attribute name="header" value="/header.jsp"/>
+      <put-attribute name="menu"   value="/menu.jsp"/>
+      <put-attribute name="body"   value="/body.jsp"/>
+      <put-attribute name="footer"   value="/footer.jsp"/>
+  </definition>
+  
+  <definition name="inviteUser" extends="baseLayout">
+      <put-attribute name="title"  value="Invite User"/>
+      <put-attribute name="body"   value="/inviJoin.jsp"/>      
+  </definition>
+  
+  <definition name="addUser" extends="baseLayout">
+      <put-attribute name="title"  value="Add User"/>
+      <put-attribute name="body"   value="/register.jsp"/>      
+  </definition>
+  
+  <definition name="welcome" extends="baseLayout">
+      <put-attribute name="title"  value="Welcome"/>
+      <put-attribute name="body"   value="/welcome.jsp"/>      
+  </definition>
+  
+  <definition name="friends" extends="baseLayout">
+      <put-attribute name="title"  value="Friends"/>
+      <put-attribute name="body"   value="/friends.jsp"/>      
+  </definition>
+  
+  <definition name="emailCheck" extends="baseLayout">
+      <put-attribute name="title"  value="Message Sent"/>
+      <put-attribute name="body"   value="/emailCheck.jsp"/>      
+  </definition>
+  
+  <definition name="successCustomer" extends="baseLayout">
+      <put-attribute name="title"  value="New User Added"/>
+      <put-attribute name="body"   value="/successCustomer.jsp"/>      
+  </definition>
+  
+  <definition name="login" extends="baseLayout">
+      <put-attribute name="title"  value="Login"/>
+      <put-attribute name="body"   value="/login.jsp"/>      
+  </definition>
+  <definition name="registerRecover" extends="baseLayout">
+      <put-attribute name="title"  value="Register or Recover"/>
+      <put-attribute name="body"   value="/registerRecover.jsp"/>      
+  </definition>
+  <definition name="masterAdd" extends="baseLayout">
+      <put-attribute name="title"  value="Master Bill"/>
+      <put-attribute name="body"   value="/masterBillAdd.jsp"/>      
+  </definition>
+  <definition name="fullProfile" extends="baseLayout">
+      <put-attribute name="title"  value="Full Profile"/>
+      <put-attribute name="body"   value="/fullProfile.jsp"/>      
+  </definition>
+  <definition name="masterContainer" extends="baseLayout">
+  	  <put-attribute name="title"  value="Master Container"/>
+      <put-attribute name="body"  value="/masterContainer.jsp"/>      
+  </definition>
+  <definition name="paymentList" extends="baseLayout">
+  	  <put-attribute name="title"  value="Payment List"/>
+      <put-attribute name="body"  value="/paymentList.jsp"/>      
+  </definition>
+  <definition name="friendContainer" extends="baseLayout">
+  	  <put-attribute name="title"  value="Friend Container"/>
+      <put-attribute name="body"  value="/friendContainer.jsp"/>      
+  </definition>
+  <definition name="fundingOption" extends="baseLayout">
+      <put-attribute name="title"  value="Funding Option"/>
+      <put-attribute name="body"   value="/fundingOption.jsp"/>      
+  </definition>
+  <definition name="myPaymentsContainer" extends="baseLayout">
+  	  <put-attribute name="title"  value="My Payments Container"/>
+      <put-attribute name="body"  value="/myPaymentsContainer.jsp"/>      
+  </definition>
+  
+</tiles-definitions>
